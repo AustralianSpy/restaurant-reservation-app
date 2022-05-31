@@ -19,27 +19,12 @@ async function list(req, res) {
 }
 
 async function create(req, res) {
-    const { data = {} } = req.body;
-    const newReservation = service.create(data);
-
-    /* const { data: { reservation_id, first_name, last_name, mobile_number, reservation_date, reservation_time, people } = {} } = req.body;
-
-    const newReservation = {
-        reservation_id,
-        first_name,
-        last_name,
-        mobile_number,
-        reservation_date,
-        reservation_time,
-        people
-    };
-
-    const response = await service.create(newReservation); */
+    const newReservation = await service.create(req.body.data);
 
     res.status(201).json({ data: newReservation });
 }
 
 module.exports = {
     list: asyncErrorBoundary(list),
-    create: [hasProperties(properties), asyncErrorBoundary(create)],
+    create: asyncErrorBoundary(create),
 };
