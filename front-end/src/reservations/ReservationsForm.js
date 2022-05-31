@@ -45,6 +45,10 @@ export default function ReservationsForm() {
                     <input name="reservation_time" id="reservation_time" type="time" placeholder="HH:MM" pattern="[0-9]{2}:[0-9]{2}" className="form-control" onChange={handleChange} value={reservation.reservation_time} />
                 </div>
                 <div className="form-group">
+                    <label htmlFor="people" className="text-uppercase font-weight-bold">Number of People:</label>
+                    <input name="people" id="people" type="number" className="form-control" onChange={handleChange} value={reservation.people} />
+                </div>
+                <div className="form-group">
                     <button className="btn btn-secondary mr-2" onClick={handleCancel}>Cancel</button>
                     <button className="btn btn-primary" type="submit">Submit</button>
                 </div>
