@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router";
+import ErrorAlert from "../layout/ErrorAlert";
 import { createReservation } from "../utils/api";
 
 export default function ReservationsForm() {
     const history = useHistory();
     const { path } = useRouteMatch();
+    // Use path to determine what heading / form content to render.
+
     const [reservation, setReservation] = useState({
         first_name: "",
         last_name: "",
@@ -13,7 +16,8 @@ export default function ReservationsForm() {
         reservation_time: "",
         people: undefined,
     });
-    // Use path to determine what heading / form content to render.
+    const [reservationError, setReservationError] = useState(null);
+    
 
     const handleChange = ({ target }) => {
         setReservation({
@@ -24,6 +28,7 @@ export default function ReservationsForm() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        setReservationError(null);
         const abortController = new AbortController();
         const submitData = async () => {
             if (path === "/reservations/new"){
@@ -32,6 +37,7 @@ export default function ReservationsForm() {
                     console.log(`Created reservation: ${response}.`);
                     history.push("/dashboard")
                 } catch (error) {
+                    setReservationError(error);
                     throw error;
                 }
             } else if (path === "/reservations/edit"){
@@ -55,6 +61,7 @@ export default function ReservationsForm() {
     return (
         <main>
             <h1>{(path === "/reservations/new") ? "Make a new reservation:" : "Edit your reservation:"}</h1>
+            <ErrorAlert error={reservationError} />
             <form onSubmit={handleSubmit} aria-label="reservations form">
                 <div className="form-group">
                     <label htmlFor="first_name" className="text-uppercase font-weight-bold">First Name:</label>
@@ -66,7 +73,7 @@ export default function ReservationsForm() {
                 </div>
                 <div className="form-group">
                     <label htmlFor="mobile_number" className="text-uppercase font-weight-bold">Mobile Number:</label>
-                    <input name="mobile_number" id="mobile_number" type="tel" className="form-control" onChange={handleChange} value={reservation.mobile_number} required />
+                    <input name="mobile_number" id="mobile_number" type="tel" placeholder="###-###-####" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" className="form-control" onChange={handleChange} value={reservation.mobile_number} required />
                 </div>
                 <div className="form-group">
                     <label htmlFor="reservation_date" className="text-uppercase font-weight-bold">Date of Reservation:</label>
