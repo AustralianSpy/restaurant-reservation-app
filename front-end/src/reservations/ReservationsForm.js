@@ -1,18 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router";
 
 export default function ReservationsForm() {
     const history = useHistory();
     const { path } = useRouteMatch();
-    const reservation = "hello";
+    const [reservation, setReservation] = useState([]);
     // Use path to determine what heading / form content to render.
 
-    const handleChange = (event) => {
-        event.preventDefault();
+    const handleChange = ({ target }) => {
+        setReservation({
+            ...reservation,
+            [target.name]: target.value,
+        });
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        const abortController = new AbortController();
+        const submitData = async () => {
+            if (path === "/reservations/new"){
+                try {
+                    // make call to create new deck here
+                    history.push("/dashboard");
+                } catch (error) {
+                    throw error;
+                }
+            } else if (path === "/reservations/edit"){
+                try {
+                    // update existing reservation here
+                } catch (error) {
+                    throw error;
+                }
+            }
+        }
+        submitData();
+
+        return () => { abortController.abort() };
     };
 
     const handleCancel = (event) => {
@@ -22,7 +45,7 @@ export default function ReservationsForm() {
 
     return (
         <main>
-            <h1>{(path === '/reservations/new') ? "Make a new reservation:" : "Edit your reservation:"}</h1>
+            <h1>{(path === "/reservations/new") ? "Make a new reservation:" : "Edit your reservation:"}</h1>
             <form onSubmit={handleSubmit} aria-label="reservations form">
                 <div className="form-group">
                     <label htmlFor="first_name" className="text-uppercase font-weight-bold">First Name:</label>
