@@ -60,7 +60,7 @@ function Dashboard({ date }) {
           <span className="bi bi-arrow-bar-right" /></button>
       </div>
       <ErrorAlert error={reservationsError} />
-      {(reservations) ? JSON.stringify(reservations) : "No reservations this day."}
+      {(reservations.length > 0) ? JSON.stringify(reservations) : "No reservations this day."}
     </main>
   );
 }
