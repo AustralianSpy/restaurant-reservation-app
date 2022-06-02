@@ -5,6 +5,8 @@ import useQuery from "../utils/useQuery";
 import ErrorAlert from "../layout/ErrorAlert";
 import { today, next, previous } from "../utils/date-time";
 
+import ReservationDetails from "../reservations/ReservationDetails";
+
 /**
  * Defines the dashboard page.
  * @param date
@@ -60,10 +62,10 @@ function Dashboard({ date }) {
       <section className="d-md-flex flex-column mb-3" id="reservations">
         <h4 className="mb-1">Reservations for {date}:</h4>
         <ErrorAlert error={reservationsError} />
-        {(reservations.length > 0) ? JSON.stringify(reservations) : "No reservations this day."}
-        {/*
-          (reservations.length > 0) ? <ReservationsList reservations={reservations} /> : <h3>No reservations this day.</h3>
-        */}
+        {/*(reservations.length > 0) ? JSON.stringify(reservations) : "No reservations this day." */}
+        {
+          (reservations.length > 0) ? <ReservationDetails reservations={reservations} /> : <h3>No reservations this day.</h3>
+        }
         <div className="button-group">
           <button className="btn btn-primary" name="previous" onClick={handlePreviousDate} to={`/dashboard/date=${date}`}>
             <span className="bi bi-arrow-bar-left" />
