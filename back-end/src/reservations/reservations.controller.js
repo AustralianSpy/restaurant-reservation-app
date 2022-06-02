@@ -15,7 +15,6 @@ const VALID_PROPERTIES = [
 // into the request. Client form prevents empty properties.
 function hasValidProperties(req, res, next) {
     const { data = {} } = req.body;
-    console.log(data, "hasvalidprops")
 
     const invalidProperties = Object.keys(data).filter(
         (field) => !VALID_PROPERTIES.includes(field) || !field.length
@@ -40,7 +39,52 @@ function hasValidDate(req, res, next) {
     if (!date || !validDate) {
         next({
             status: 400,
-            message: 'reservation_date is invalid.',
+            message: 'reservation_date is not a valid date.',
+        });
+    }
+
+    next();
+}
+
+// Middleware splits dates apart to strip them of timezone so validation can
+// assume the inputed date is in the same timezone as the user.
+function hasFutureDate(req, res, next) {
+    const now = new Date();
+    const currentDay = now.getDate();
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear();
+    const currentDate = new Date(`${currentMonth}-${currentDay}-${currentYear}`);
+
+    const reservation = req.body.data.reservation_date;
+    const resYear = reservation.substr(0, 4);
+    const resMonth =  reservation.substr(5, 2);
+    const resDay =  reservation.substr(8, 2);
+    const reservationDate = new Date(`${resMonth}-${resDay}-${resYear}`);
+
+    let future = true;
+    if (currentDate > reservationDate) future = false;
+    
+    if (!reservation || !future) {
+        next({
+            status: 400,
+            message: 'reservation_date must be a future date.',
+        });
+    }
+
+    // Store whether the reservation is being made for TODAY for future use.
+    (currentDate.getTime() == reservationDate.getTime()) ? res.locals.today = true : res.locals.today = false;
+    next();
+}
+
+function nonTuesdayDate(req, res, next) {
+    const reservation = req.body.data.reservation_date;
+    const date = new Date(reservation);
+    const day = date.getDay();
+
+    if (day === 1) {
+        next({
+            status: 400,
+            message: "reservation_date cannot be on a Tuesday. Sorry, we're closed!",
         });
     }
 
@@ -59,6 +103,37 @@ function hasValidTime(req, res, next) {
             status: 400,
             message: 'reservation_time is invalid.',
         });
+    }
+    next();
+}
+
+function hasFutureTime(req, res, next) {
+    const now = new Date();
+    const currentHours = now.getHours();
+    const currentMins = now.getMinutes();
+    
+
+    const reservation = req.body.data.reservation_time;
+    const resHours = Number(reservation.substr(0, 2));
+    const resMins = Number(reservation.substr(3, 4));
+
+    if (res.locals.today === true) {
+        if (resHours < currentHours || (resMins <= currentMins && resHours <= currentHours)) {
+            next({
+                status: 400,
+                message: 'reservation_time must be a future time.',
+            });
+        }
+    } else if ((resHours === 21 && resMins > 30) || resHours > 21) {
+        next({
+            status: 400,
+            message: 'reservation_time must be more than an hour before closing at 10:30 PM.',
+        });
+    } else if (resHours <= 10 || (resHours === 10 && resMins < 30)) {
+        next({
+            status: 400,
+            message: 'reservation_time cannot be before we open at 10:30 AM.'
+        })
     }
     next();
 }
@@ -95,7 +170,10 @@ module.exports = {
         hasAllProperties,
         hasValidProperties,
         hasValidDate,
+        hasFutureDate,
+        nonTuesdayDate,
         hasValidTime,
+        hasFutureTime,
         hasValidPeople,
         asyncErrorBoundary(create)
     ],
