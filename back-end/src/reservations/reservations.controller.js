@@ -117,6 +117,8 @@ function hasFutureTime(req, res, next) {
     const resHours = Number(reservation.substr(0, 2));
     const resMins = Number(reservation.substr(3, 4));
 
+    // Check if time is before current time if reservation is being made for today.
+    // Previously stored value.
     if (res.locals.today === true) {
         if (resHours < currentHours || (resMins <= currentMins && resHours <= currentHours)) {
             next({
@@ -150,7 +152,7 @@ function hasValidPeople(req, res, next) {
 }
 
 async function list(req, res) {
-    // Request list of all reservations.
+    // Request list of all reservations for date chosen on dashboard.
     const { date } = req.query;
     
     const reservations = await service.list(date);
