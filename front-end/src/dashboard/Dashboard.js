@@ -6,6 +6,7 @@ import ErrorAlert from "../layout/ErrorAlert";
 import { today, next, previous } from "../utils/date-time";
 
 import ReservationDetails from "../reservations/ReservationDetails";
+import TableDetails from "../tables/TableDetails";
 
 /**
  * Defines the dashboard page.
@@ -81,10 +82,10 @@ function Dashboard({ date }) {
       <section className="d-md-flex flex-column mb-3" id="tables">
         <h4 className="mb-1">All Tables:</h4>
           <ErrorAlert error={tablesError} />
-          {(tables.length > 0) ? JSON.stringify(tables) : "You have no registered tables."}
-          {/*
-            (tables.length > 0) ? <TablesList tables={tables} /> : <h3>You have no registered tables.</h3>
-          */}
+          {/*(tables.length > 0) ? JSON.stringify(tables) : "You have no registered tables."*/}
+          {
+            (tables.length > 0) ? <TableDetails tables={tables} /> : <h5>You have no registered tables.</h5>
+          }
         </section>
     </main>
   );
