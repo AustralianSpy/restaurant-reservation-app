@@ -18,9 +18,11 @@ export default function SeatReservation() {
 
     const [reservation, setReservation] = useState({});
     const [tables, setTables] = useState([]);
+    const [form, setForm] = useState(null);
 
     const [error, setError] = useState(null);
 
+    // ON LOAD:
     useEffect(loadReservation, [reservation_id]);
 
     function loadReservation() {
@@ -38,13 +40,18 @@ export default function SeatReservation() {
         return () => abortController.abort();
     }
 
+    // FORM HANDLERS:
+    const handleChange = ({ target }) => {
+        setForm(target.value);
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         setError(null);
         const abortController = new AbortController();
         const submitData = async () => {
             try {
-                await reserveTable(reservation_id, abortController.signal);
+                await reserveTable({ table_id: form, reservation_id: reservation_id}, abortController.signal);
                 history.push('/dashboard');
             } catch (e) {
                 if (e.name === "AbortedError") {
@@ -72,9 +79,9 @@ export default function SeatReservation() {
                 <form onSubmit={handleSubmit} aria-label="seating form">
                 <div className="form-group">
                     <label htmlFor="table_id" className="text-uppercase font-weight-bold">Please select a table:</label>
-                    <select name="table_id" id="table_id" placeholder="Table - Capacity" className="form-control" required>
+                    <select name="table_id" id="table_id" placeholder="Table - Capacity" className="form-control" onChange={handleChange} required>
                         {
-                            
+                            tables.map((table) => <option value={table.table_id}>{table.table_name} - {table.capacity}</option>)
                         }
                     </select>
                 </div>
