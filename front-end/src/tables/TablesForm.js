@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router";
 import ErrorAlert from "../layout/ErrorAlert";
-// import { createTable } from "../utils/api";
+import { createTable } from "../utils/api";
 
 export default function TablesForm() {
     const history = useHistory();
@@ -17,12 +17,9 @@ export default function TablesForm() {
     
 
     const handleChange = ({ target }) => {
-        let { value } = target;
-        if (target.name === "capacity") value = Number(target.value);
-        
         setTable({
             ...table,
-            [target.name]: value,
+            [target.name]: target.value,
         });
     };
 
@@ -33,8 +30,8 @@ export default function TablesForm() {
         const submitData = async () => {
             if (path === "/tables/new"){
                 try {
-                    // await createTable(table, abortController.signal);
-                    // history.push('/dashboard')
+                    await createTable(table, abortController.signal);
+                    history.push('/dashboard')
                 } catch (error) {
                     if (error.name === "AbortedError") {
                         console.log("Aborted request.");

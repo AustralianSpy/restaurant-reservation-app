@@ -101,7 +101,7 @@ export async function readReservation(reservation_id, signal) {
 
 /**
  * Retrieves all existing tables.
- * @returns {Promise<[reservation]>}
+ * @returns {Promise<[tables]>}
  *  a promise that resolves to a possibly empty array of tables saved in the database.
  */
 
@@ -111,8 +111,28 @@ export async function listTables(signal) {
 }
 
 /**
+  Creates a new table.
+  @returns {Promise<[table]>}
+  a promise that resolves to the reservation data that was saved in the database.
+*/
+
+export async function createTable(table, signal) {
+  const url = `${API_BASE_URL}/tables`;
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: table }),
+    signal,
+  };
+  
+  const result = await fetchJson(url, options, {});
+
+  return  result;
+}
+
+/**
   Creates a new reservation.
-  @returns {Promise<[reservation]>}
+  @returns {Promise<[table]>}
   a promise that resolves to the reservation data that was saved in the database.
 */
 
