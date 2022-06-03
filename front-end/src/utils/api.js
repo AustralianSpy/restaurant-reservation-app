@@ -88,7 +88,45 @@ export async function createReservation(reservation, signal) {
   return  result;
 }
 
+/**
+  Retrieves a single existing reservation.
+  @returns {Promise<[reservation]>}
+  a promise that resolves to the reservation data that was saved in the database.
+*/
+
+export async function readReservation(reservation_id, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`; 
+  return await fetchJson(url, { headers, signal }, []);
+}
+
+/**
+ * Retrieves all existing tables.
+ * @returns {Promise<[reservation]>}
+ *  a promise that resolves to a possibly empty array of tables saved in the database.
+ */
+
 export async function listTables(signal) {
   const url = new URL(`${API_BASE_URL}/tables`);
   return await fetchJson(url, { headers, signal }, []);
+}
+
+/**
+  Creates a new reservation.
+  @returns {Promise<[reservation]>}
+  a promise that resolves to the reservation data that was saved in the database.
+*/
+
+export async function reserveTable(table, signal) {
+  const url = `${API_BASE_URL}/tables/${table.table_id}/seat/`;
+  const { reservation_id } = table;
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: reservation_id }),
+    signal,
+  };
+  
+  const result = await fetchJson(url, options, {});
+
+  return  result;
 }

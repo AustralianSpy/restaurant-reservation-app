@@ -24,7 +24,7 @@ export default function ReservationDetails({ reservations }) {
                 </div>
                 <div className="list-group list-group-flush">
                     <li className="list-group-item">{time}</li>
-                    <li className="list-group-item">{people == 1 ? "1 person" : `${people} people`}</li>
+                    <li className="list-group-item">{people === 1 ? "1 person" : `${people} people`}</li>
                     <li className="list-group-item">{mobile_number}</li>
                 </div>
                 <div className="card-body">

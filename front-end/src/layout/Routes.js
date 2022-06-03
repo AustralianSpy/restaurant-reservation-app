@@ -6,6 +6,7 @@ import NotFound from "./NotFound";
 import ReservationsForm from "../reservations/ReservationsForm";
 import TablesForm from "../tables/TablesForm";
 import { today } from "../utils/date-time";
+import SeatReservation from "../reservations/SeatReservation";
 
 /**
  * Defines all the routes for the application.
@@ -26,6 +27,9 @@ export default function Routes() {
       </Route>
       <Route path="/dashboard">
         <Dashboard date={today()} />
+      </Route>
+      <Route exact={true} path="/reservations/:reservation_id/seat">
+        <SeatReservation />
       </Route>
       <Route path="/reservations/new">
         <ReservationsForm />
