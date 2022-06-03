@@ -29,7 +29,7 @@ export default function SeatReservation() {
         const abortController = new AbortController();
         setError(null);
     
-        readReservation({ reservation_id }, abortController.signal)
+        readReservation(reservation_id, abortController.signal)
             .then(setReservation)
             .catch(setError); 
 

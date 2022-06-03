@@ -17,7 +17,16 @@ function create(reservation) {
         .then((result) => result[0]);
 }
 
+// Retrieve a single reservation by id.
+function read(reservation_id) {
+    return knex("reservations")
+        .select("*")
+        .where({ reservation_id: reservation_id })
+        .first();
+}
+
 module.exports = {
     list,
     create,
+    read,
 };

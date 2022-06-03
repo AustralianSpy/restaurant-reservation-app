@@ -166,6 +166,14 @@ async function create(req, res) {
     res.status(201).json({ data: newReservation });
 }
 
+async function read(req, res) {
+    const { reservation_id } = req.params;
+    const reservation = await service.read(reservation_id);
+    
+
+    res.json({ data: reservation });
+}
+
 module.exports = {
     list: asyncErrorBoundary(list),
     create: [
@@ -179,4 +187,5 @@ module.exports = {
         hasValidPeople,
         asyncErrorBoundary(create)
     ],
+    read: asyncErrorBoundary(read),
 };
