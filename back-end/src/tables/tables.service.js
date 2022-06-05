@@ -20,11 +20,20 @@ function update(updatedTable) {
     return knex("tables")
         .select("*")
         .where({ table_id: updatedTable.table_id })
-        .update(updatedTable, "*")
+        .update(updatedTable, "*");
+}
+
+// Retrieve one table.
+function read(table_id) {
+    return knex("tables")
+        .select("*")
+        .where({ table_id })
+        .first();
 }
 
 module.exports = {
     list,
     create,
     update,
+    read,
 };

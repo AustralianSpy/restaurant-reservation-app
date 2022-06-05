@@ -7,7 +7,7 @@ export default function TableDetails({ tables }) {
         const status = (reservation_id === null) ? "Free" : "Occupied";
 
         return (
-            <div className="card mb-3" id={table_id}>
+            <div className="card mb-3" key={table_id}>
                 <div className="card-header">
                     {table_name}
                 </div>

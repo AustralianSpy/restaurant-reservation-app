@@ -20,22 +20,25 @@ export default function SeatReservation() {
     const [tables, setTables] = useState([]);
     const [form, setForm] = useState(null);
 
-    const [error, setError] = useState(null);
+    const [seatError, setSeatError] = useState(null);
 
     // ON LOAD:
     useEffect(loadReservation, [reservation_id]);
 
     function loadReservation() {
         const abortController = new AbortController();
-        setError(null);
+        setSeatError(null);
     
         readReservation(reservation_id, abortController.signal)
             .then(setReservation)
-            .catch(setError); 
+            .catch(setSeatError); 
 
         listTables(abortController.signal)
-            .then(setTables)
-            .catch(setError);
+            .then((res) => {
+                setTables(res);
+                setForm(res[0]["table_id"])
+            })
+            .catch(setSeatError);
         
         return () => abortController.abort();
     }
@@ -47,18 +50,18 @@ export default function SeatReservation() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        setError(null);
+        setSeatError(null);
         const abortController = new AbortController();
         const submitData = async () => {
             try {
-                await reserveTable({ table_id: form, reservation_id: reservation_id}, abortController.signal);
+                await reserveTable({"table_id": form, "reservation_id": Number(reservation_id)}, abortController.signal);
                 history.push('/dashboard');
-            } catch (e) {
-                if (e.name === "AbortedError") {
+            } catch (error) {
+                if (error.name === "AbortedError") {
                     console.log("Aborted request.");
                 } else {
-                    setError(e);
-                    throw e;
+                    setSeatError(error);
+                    throw error;
                 }
             }
         }
@@ -81,7 +84,7 @@ export default function SeatReservation() {
                     <label htmlFor="table_id" className="text-uppercase font-weight-bold">Please select a table:</label>
                     <select name="table_id" id="table_id" placeholder="Table - Capacity" className="form-control" onChange={handleChange} required>
                         {
-                            tables.map((table) => <option value={table.table_id}>{table.table_name} - {table.capacity}</option>)
+                            tables.map((table) => <option value={table.table_id} key={table.table_id}>{table.table_name} - {table.capacity}</option>)
                         }
                     </select>
                 </div>
@@ -107,7 +110,7 @@ export default function SeatReservation() {
         return (
             <main className="mt-3">
                 <div className="d-flex flex-column">
-                    <ErrorAlert error={error} />
+                    <ErrorAlert error={seatError} />
                     <button className="btn btn-warning text-uppercase col-6 mx-auto" onClick={()=>history.goBack()}>Go back</button>
                 </div>
             </main>
