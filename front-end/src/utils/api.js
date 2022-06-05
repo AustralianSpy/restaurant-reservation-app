@@ -137,12 +137,12 @@ export async function createTable(table, signal) {
 */
 
 export async function reserveTable(table, signal) {
-  const url = `${API_BASE_URL}/tables/${table.table_id}/seat/`;
-  const { reservation_id } = table;
+  const { table_id, reservation_id } = table;
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({ data: reservation_id }),
+    body: JSON.stringify({ data: {"reservation_id": reservation_id} }),
     signal,
   };
   
