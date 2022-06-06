@@ -131,9 +131,9 @@ export async function createTable(table, signal) {
 }
 
 /**
-  Creates a new reservation.
+  Adds a reservation_id to a table.
   @returns {Promise<[table]>}
-  a promise that resolves to the reservation data that was saved in the database.
+  a promise that resolves to the table data that was saved in the database.
 */
 
 export async function reserveTable(table, signal) {
@@ -149,4 +149,22 @@ export async function reserveTable(table, signal) {
   const result = await fetchJson(url, options, {});
 
   return  result;
+}
+
+/**
+  Removes the reservation_id from a table.
+  @returns {Promise<[table]>}
+  a promise that resolves to the table data that was saved in the database.
+*/
+
+export async function finishTable(table_id, signal) {
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+  const options = {
+    method: "DELETE",
+    headers,
+    body: JSON.stringify({ data: table_id }),
+    signal,
+  };
+
+  return await fetchJson(url, options, {});
 }

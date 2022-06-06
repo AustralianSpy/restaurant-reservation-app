@@ -1,13 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
+import { useHistory } from "react-router";
+import { finishTable } from "../utils/api";
 
 export default function TableDetails({ tables }) {
-    const free = "Free";
-    const occupied = (
-        <>Occupied <button type="button" className="btn btn-dark ml-3" data-toggle="modal" data-target="#finishTable" aria-controls="finishTable" aria-hidden="true" aria-label="toggle modal">Finish</button></>
-    );
+    const history = useHistory();
+    const [tableId, setTableId] = useState(null);
 
-    const handleFinish = () => {
-        return;
+    const handleFinish = (event) => {
+        event.preventDefault();
+        
+        const abortController = new AbortController();
+        const submitData = async () => {
+            try {
+                await finishTable(tableId, abortController.signal);
+                history.push('/dashboard');
+            } catch (error) {
+                if (error.name === "AbortedError") {
+                    console.log("Aborted request.");
+                } else {
+                    throw error;
+                }
+            }
+        }
+        submitData();
+
+        return () => { abortController.abort() };
+    }
+
+    const handleSetId = (table_id) => {
+        setTableId(table_id);
     }
 
     return (
@@ -15,7 +36,7 @@ export default function TableDetails({ tables }) {
             {
                 tables.map((table) => {
                     const { table_name, capacity, reservation_id, table_id } = table;
-                    const status = (reservation_id === null) ? free : occupied;
+                    const occupied = (reservation_id === null) ?  false : true;
         
                     return (
                         <div className="card mb-3" key={table_id}>
@@ -24,7 +45,22 @@ export default function TableDetails({ tables }) {
                             </div>
                             <div className="list-group list-group-flush">
                                 <li className="list-group-item">Capacity: {capacity}</li>
-                                <li className="list-group-item text-uppercase" data-table-id-status={table_id}>{status}</li>
+                                <li className="list-group-item text-uppercase" data-table-id-status={table_id}>
+                                    {
+                                        !occupied ?
+                                            "Free" :
+                                            <>Occupied
+                                            <button type="button"
+                                            className="btn btn-dark ml-3"
+                                            data-toggle="modal" data-target="#finishTable"
+                                            aria-controls="finishTable"
+                                            aria-hidden="true" aria-label="toggle modal"
+                                            onClick={()=> handleSetId(table_id)}
+                                            data-table-id-finish={table_id}>
+                                                Finish
+                                            </button></>
+                                    }
+                                </li>
                             </div>
                         </div>
                     )
