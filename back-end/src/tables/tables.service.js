@@ -23,6 +23,13 @@ function update(updatedTable) {
         .update(updatedTable, "*");
 }
 
+function finish(table_id) {
+    return knex("tables")
+        .select("*")
+        .where({ table_id })
+        .update({ reservation_id: null });
+}
+
 // Retrieve one table.
 function read(table_id) {
     return knex("tables")
@@ -36,4 +43,5 @@ module.exports = {
     create,
     update,
     read,
+    finish,
 };
