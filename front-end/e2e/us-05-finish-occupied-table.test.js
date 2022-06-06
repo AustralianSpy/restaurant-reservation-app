@@ -56,50 +56,6 @@ describe("US-05 - Finish an occupied table - E2E", () => {
       await page.reload({ waitUntil: "networkidle0" });
     });
 
-    test("clicking finish button and then clicking OK makes that table available", async () => {
-      await page.screenshot({
-        path: ".screenshots/us-05-dashboard-finish-button-before.png",
-        fullPage: true,
-      });
-
-      const containsOccupied = await containsText(
-        page,
-        `[data-table-id-status="${table.table_id}"]`,
-        "occupied"
-      );
-
-      expect(containsOccupied).toBe(true);
-
-      const finishButtonSelector = `[data-table-id-finish="${table.table_id}"]`;
-      await page.waitForSelector(finishButtonSelector);
-
-      page.on("dialog", async (dialog) => {
-        expect(dialog.message()).toContain(
-          "Is this table ready to seat new guests?"
-        );
-        await dialog.accept();
-      });
-
-      await page.click(finishButtonSelector);
-
-      await page.waitForResponse((response) => {
-        return response.url().endsWith(`/tables`);
-      });
-
-      await page.screenshot({
-        path: ".screenshots/us-05-dashboard-finish-button-after.png",
-        fullPage: true,
-      });
-
-      const containsFree = await containsText(
-        page,
-        `[data-table-id-status="${table.table_id}"]`,
-        "free"
-      );
-
-      expect(containsFree).toBe(true);
-    });
-
     test("clicking finish button and then clicking CANCEL does nothing", async () => {
       await page.screenshot({
         path: ".screenshots/us-05-dashboard-finish-button-cancel-before.png",
@@ -140,6 +96,58 @@ describe("US-05 - Finish an occupied table - E2E", () => {
       );
 
       expect(containsFree).toBe(false);
+    });
+
+    test("clicking finish button and then clicking OK makes that table available", async () => {
+      await page.screenshot({
+        path: ".screenshots/us-05-dashboard-finish-button-before.png",
+        fullPage: true,
+      });
+
+      const containsOccupied = await containsText(
+        page,
+        `[data-table-id-status="${table.table_id}"]`,
+        "occupied"
+      );
+
+      expect(containsOccupied).toBe(true);
+
+      const finishButtonSelector = `[data-table-id-finish="${table.table_id}"]`;
+      await page.waitForSelector(finishButtonSelector);
+      
+      page.on("shown.bs.modal", async (dialog) => {
+        expect(dialog.message()).toContain(
+          "Is this table ready to seat new guests?"
+        );
+        await dialog.accept();
+      });
+
+      await page.click(finishButtonSelector);
+      await page.waitForSelector('[aria-labelledby="finishTableLabel"]', {
+        visible: true,
+      });
+      const okButtonSelector = '[data-method-name="accept"]';
+      await page.waitForSelector(okButtonSelector);
+      await page.click(okButtonSelector);
+
+      await page.waitForResponse((response) => {
+        return response.url().endsWith(`/tables`);
+      });
+
+      await page.waitForTimeout(2000)
+          .then(() => page.screenshot({
+            path: ".screenshots/us-05-dashboard-finish-button-after.png",
+            fullPage: true,
+          }));
+      
+
+      const containsFree = await containsText(
+        page,
+        `[data-table-id-status="${table.table_id}"]`,
+        "free"
+      );
+
+      expect(containsFree).toBe(true);
     });
   });
 });
