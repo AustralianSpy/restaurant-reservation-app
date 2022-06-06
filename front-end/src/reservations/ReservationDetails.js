@@ -15,9 +15,9 @@ export default function ReservationDetails({ reservations }) {
     };
     
     return reservations.map((reservation) => {
-        const {first_name, last_name, reservation_time, people, mobile_number, reservation_id } = reservation;
+        const {first_name, last_name, reservation_time, people, mobile_number, reservation_id, status } = reservation;
         const time = formatTime(reservation_time);
-        return (
+        if (status !== "finished") return (
             <div className="card mb-3" key={reservation_id}>
                 <div className="card-header">
                     {first_name} {last_name}
@@ -28,9 +28,10 @@ export default function ReservationDetails({ reservations }) {
                     <li className="list-group-item">{mobile_number}</li>
                 </div>
                 <div className="card-body">
-                    <a href={`/reservations/${reservation_id}/seat`} className="btn btn-success">Seat</a>
+                    <p className="text-uppercase fw-bold" data-reservation-id-status={reservation_id}>{status}</p>
+                    { (status === 'booked') ? <a href={`/reservations/${reservation_id}/seat`} className="btn btn-success ml-3">Seat</a> : null }
                 </div>
             </div>
         )
-    })
+    });
 }
