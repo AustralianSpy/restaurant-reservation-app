@@ -18,7 +18,7 @@ export default function ReservationDetails({ reservations }) {
         const {first_name, last_name, reservation_time, people, mobile_number, reservation_id } = reservation;
         const time = formatTime(reservation_time);
         return (
-            <div className="card mb-3" id={reservation_id}>
+            <div className="card mb-3" key={reservation_id}>
                 <div className="card-header">
                     {first_name} {last_name}
                 </div>

@@ -115,7 +115,6 @@ function hasValidReservation(req, res, next) {
 
 function hasFreeStatus (req, res, next) {
     const { reservation_id, table_name } = res.locals.table;
-    console.log(reservation_id);
     if (reservation_id !== null) {
         return next({
             status: 400,
@@ -126,6 +125,19 @@ function hasFreeStatus (req, res, next) {
     next();
 }
 
+function hasOccupiedStatus (req, res, next) {
+    const { reservation_id, table_name } = res.locals.table;
+    if (reservation_id === null) {
+        return next({
+            status: 400,
+            message: `Table ${table_name} is free, not occupied. This table cannot be finished.`,
+        });
+    }
+
+    next();
+}
+
+// Update a table, including possible reservation status.
 async function update(req, res) {
     const { table_id } = res.locals.table;
     const { reservation_id } = res.locals.reservation;
@@ -136,6 +148,13 @@ async function update(req, res) {
     };
 
     res.status(200).json({ data: await service.update(updatedTable) });
+}
+
+// Finish a table by changing reservation_id to 'null'.
+async function finish(req, res) {
+    const { table_id } = res.locals.table;
+
+    res.status(200).json({ data: await service.finish(table_id) });
 }
 
 module.exports = {
@@ -155,5 +174,10 @@ module.exports = {
         hasFreeStatus,
         hasValidReservation,
         asyncErrorBoundary(update),
+    ],
+    finish: [
+        asyncErrorBoundary(tableExists),
+        hasOccupiedStatus,
+        asyncErrorBoundary(finish),
     ],
 }

@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router";
 import { finishTable } from "../utils/api";
 
+/*
+    Component lists all registered tables as well as handles the 
+    'finish table' functionality that removes a seated reservation
+    from that table.
+*/
+
 export default function TableDetails({ tables }) {
-    const history = useHistory();
     const [tableId, setTableId] = useState(null);
 
     const handleFinish = (event) => {
@@ -13,7 +17,7 @@ export default function TableDetails({ tables }) {
         const submitData = async () => {
             try {
                 await finishTable(tableId, abortController.signal);
-                history.push('/dashboard');
+                window.location.reload();
             } catch (error) {
                 if (error.name === "AbortedError") {
                     console.log("Aborted request.");
@@ -27,6 +31,7 @@ export default function TableDetails({ tables }) {
         return () => { abortController.abort() };
     }
 
+    // Holds ID of table user is attempting to finish.
     const handleSetId = (table_id) => {
         setTableId(table_id);
     }
@@ -49,7 +54,7 @@ export default function TableDetails({ tables }) {
                                     {
                                         !occupied ?
                                             "Free" :
-                                            <>Occupied
+                                            <>occupied
                                             <button type="button"
                                             className="btn btn-dark ml-3"
                                             data-toggle="modal" data-target="#finishTable"
@@ -67,6 +72,7 @@ export default function TableDetails({ tables }) {
                 })
             }
         
+            { /* MODAL PROMPT. Defaults to hidden until above button is clicked. */ }
             <div className="modal fade" id="finishTable" tabIndex="-1" aria-labelledby="finishTableLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
@@ -81,7 +87,7 @@ export default function TableDetails({ tables }) {
                         </div>
                         <div className="modal-footer">
                             <button className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button className="btn btn-primary" onClick={handleFinish}>OK</button>
+                            <button className="btn btn-primary" data-method-name="accept" aria-label="accept" onClick={handleFinish}>OK</button>
                         </div>
                     </div>
                 </div>
