@@ -9,6 +9,8 @@ export default function ReservationDetails({ reservations }) {
                 return `${hours-12}${minutes} PM`;
             } else if (hours === 12) {
                 return `${hours}${minutes} PM`;
+            } else if (hours === 11) {
+                return `${hours}${minutes} AM`;
             } else {
                 return `${reservation_time.substr(1,1)}${minutes} AM`;
             }
@@ -17,7 +19,7 @@ export default function ReservationDetails({ reservations }) {
     return reservations.map((reservation) => {
         const {first_name, last_name, reservation_time, people, mobile_number, reservation_id, status } = reservation;
         const time = formatTime(reservation_time);
-        if (status !== "finished") return (
+        return (
             <div className="card mb-3" key={reservation_id}>
                 <div className="card-header">
                     {first_name} {last_name}
