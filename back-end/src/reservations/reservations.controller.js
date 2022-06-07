@@ -9,6 +9,7 @@ const VALID_PROPERTIES = [
     "reservation_date",
     "reservation_time",
     "people",
+    "status",
 ];
 
 // Middleware to ensure improper properties are not being passed
@@ -27,7 +28,7 @@ function hasValidProperties(req, res, next) {
     next();
 }
 
-const hasAllProperties = hasProperties(VALID_PROPERTIES);
+const hasAllProperties = hasProperties(VALID_PROPERTIES.slice(0, -1));
 
 // Check to make sure the date of a new reservation is not in the past
 // AND that it is not on a day the restaurant is closed.
@@ -160,10 +161,39 @@ async function list(req, res) {
     res.json({ data: reservations });
 }
 
+// Middleware to prevent newly-created reservation from having a status other than "booked".
+function hasBookedStatus(req, res, next) {
+    const { status } = req.body.data;
+
+    if (status && status !== 'booked') {
+        return next({
+            status: 400,
+            message: `Invalid status of "${status}". Reservation cannot have a status other than "booked".`,
+        });
+    }
+    next();
+}
+
 async function create(req, res) {
     const newReservation = await service.create(req.body.data);
 
     res.status(201).json({ data: newReservation });
+}
+
+// Middleware to prevent attempt to read / update nonexistent reservation.
+async function reservationExists(req, res, next) {
+    const { reservation_id } = req.params;
+    const reservation = await service.read(reservation_id);
+
+    if (reservation) {
+        res.locals.reservation = reservation;
+        return next();
+    }
+
+    return next({
+        status: 404,
+        message: `Reservation #${reservation_id} not found.`,
+    });
 }
 
 async function read(req, res) {
@@ -172,6 +202,52 @@ async function read(req, res) {
     
 
     res.json({ data: reservation });
+}
+
+// Middleware to validate a change in status for pre-existing reservation.
+function hasValidStatus(req, res, next) {
+    const { status } = res.locals.reservation;
+    const updatedStatus = req.body.data.status.toLowerCase();
+
+    const validStatus = ["booked", "seated", "finished"];
+
+    if (!updatedStatus || !validStatus.includes(updatedStatus)) {
+        return next({
+            status: 400,
+            message: `Unknown status "${updatedStatus}". Please enter a valid status.`,
+        });
+    } else if (status === "finished") {
+        return next({
+            status: 400,
+            message: `Cannot change status of finished reservation.`,
+        });
+    }
+
+    next();
+}
+
+async function updateStatus(req, res) {
+    const { reservation_id } = res.locals.reservation;
+    const { status } = req.body.data;
+
+    const updatedReservation = {
+        reservation_id: reservation_id,
+        status: status,
+    };
+
+    res.status(200).json({ data: await service.updateStatus(updatedReservation) });
+}
+
+async function update(req, res) {
+    const { reservation_id } = res.locals.reservation;
+    const { data } = req.body;
+
+    const updatedReservation = {
+        ...data,
+        reservation_id: reservation_id,
+    };
+
+    res.status(200).json({ data: await service.update(updatedReservation) });
 }
 
 module.exports = {
@@ -185,7 +261,25 @@ module.exports = {
         hasValidTime,
         hasFutureTime,
         hasValidPeople,
+        hasBookedStatus,
         asyncErrorBoundary(create)
     ],
-    read: asyncErrorBoundary(read),
+    read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
+    update: [
+        asyncErrorBoundary(reservationExists),
+        hasAllProperties,
+        hasValidProperties,
+        hasValidDate,
+        hasFutureDate,
+        nonTuesdayDate,
+        hasValidTime,
+        hasFutureTime,
+        hasValidPeople,
+        asyncErrorBoundary(update)
+    ],
+    updateStatus: [
+        asyncErrorBoundary(reservationExists),
+        hasValidStatus,
+        asyncErrorBoundary(updateStatus)
+    ],
 };

@@ -137,6 +137,20 @@ function hasOccupiedStatus (req, res, next) {
     next();
 }
 
+// Validation to prevent a reservation from being seated at more than one location.
+function notAlreadySeated(req, res, next) {
+    const { status } = res.locals.reservation;
+
+    if (status.toLowerCase() === "seated") {
+        return next({
+            status: 400,
+            message: 'Cannot seat a reservation that is currently seated elsewhere.',
+        });
+    }
+
+    next();
+}
+
 // Update a table, including possible reservation status.
 async function update(req, res) {
     const { table_id } = res.locals.table;
@@ -152,9 +166,9 @@ async function update(req, res) {
 
 // Finish a table by changing reservation_id to 'null'.
 async function finish(req, res) {
-    const { table_id } = res.locals.table;
+    const { table } = res.locals;
 
-    res.status(200).json({ data: await service.finish(table_id) });
+    res.status(200).json({ data: await service.finish(table) });
 }
 
 module.exports = {
@@ -173,6 +187,7 @@ module.exports = {
         asyncErrorBoundary(tableExists),
         hasFreeStatus,
         hasValidReservation,
+        notAlreadySeated,
         asyncErrorBoundary(update),
     ],
     finish: [

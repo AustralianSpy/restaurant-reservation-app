@@ -27,8 +27,8 @@ export default function ReservationDetails({ reservations }) {
                     <li className="list-group-item">{people === 1 ? "1 person" : `${people} people`}</li>
                     <li className="list-group-item">{mobile_number}</li>
                 </div>
-                <div className="card-body">
-                    <p className="text-uppercase fw-bold" data-reservation-id-status={reservation_id}>{status}</p>
+                <div className="card-body d-flex flex-row">
+                    <p className="text-uppercase fw-bold align-self my-auto" data-reservation-id-status={reservation_id}>{status}</p>
                     { (status === 'booked') ? <a href={`/reservations/${reservation_id}/seat`} className="btn btn-success ml-3">Seat</a> : null }
                 </div>
             </div>
