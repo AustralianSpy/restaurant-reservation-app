@@ -7,6 +7,7 @@ import ReservationsForm from "../reservations/ReservationsForm";
 import TablesForm from "../tables/TablesForm";
 import { today } from "../utils/date-time";
 import SeatReservation from "../reservations/SeatReservation";
+import Search from "./Search";
 
 /**
  * Defines all the routes for the application.
@@ -36,6 +37,9 @@ export default function Routes() {
       </Route>
       <Route path="/tables/new">
         <TablesForm />
+      </Route>
+      <Route path="/search">
+        <Search />
       </Route>
       <Route>
         <NotFound />

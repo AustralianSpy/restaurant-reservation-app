@@ -79,6 +79,7 @@ export default function SeatReservation() {
         return (
             <main className="mt-3">
                 <h1 className="mb-4">Now seating table for {`${reservation.first_name} ${reservation.last_name}`}</h1>
+                <ErrorAlert error={seatError} />
                 <form onSubmit={handleSubmit} aria-label="seating form">
                 <div className="form-group">
                     <label htmlFor="table_id" className="text-uppercase font-weight-bold">Please select a table:</label>

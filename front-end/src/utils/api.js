@@ -168,3 +168,15 @@ export async function finishTable(table_id, signal) {
 
   return await fetchJson(url, options, {});
 }
+
+/**
+  Searches for a reservation by a full or partial mobile_number.
+  @param mobile_number - string entered to search for.
+  @returns {Promise<[reservations]>}
+  a promise that resolves to a potentially array of reservations that match param.
+*/
+
+export async function searchReservations(mobile_number, signal) {
+  const url = `${API_BASE_URL}reservations?mobile_number=${mobile_number}`;
+  return await fetchJson(url, { headers, signal }, []);
+}
