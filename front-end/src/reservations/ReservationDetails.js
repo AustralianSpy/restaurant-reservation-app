@@ -2,8 +2,9 @@ import React from "react";
 
 export default function ReservationDetails({ reservations }) {
     const formatTime = (reservation_time) => {
+        // -------->  FORMAT TIME FOR DISPLAY AS APPROPRIATE STRING.
         const hours = Number(reservation_time.substr(0, 2));
-            const minutes = reservation_time.substr(2, 4);
+        const minutes = reservation_time.substr(2, 4);
 
             if (hours > 12) {
                 return `${hours-12}${minutes} PM`;
@@ -16,6 +17,7 @@ export default function ReservationDetails({ reservations }) {
             }
     };
     
+    // --------> RENDER EACH RESERVATION.
     return reservations.map((reservation) => {
         const {first_name, last_name, reservation_time, people, mobile_number, reservation_id, status } = reservation;
         const time = formatTime(reservation_time);

@@ -4,10 +4,11 @@ import ErrorAlert from "../layout/ErrorAlert";
 import { createReservation } from "../utils/api";
 
 export default function ReservationsForm() {
+    // --------> USE PATH TO DETERMINE WHAT HEADING / FORM CONTENT TO RENDER.
     const history = useHistory();
     const { path } = useRouteMatch();
-    // Use path to determine what heading / form content to render.
-;
+
+    // --------> SET STATE OF RESERVATION AND ERRORS.
     const initialFormState = {
         first_name: "",
         last_name: "",
@@ -19,7 +20,7 @@ export default function ReservationsForm() {
     const [reservation, setReservation] = useState({ ...initialFormState });
     const [reservationError, setReservationError] = useState(null);
     
-
+    // --------> FORM HANDLERS.
     const handleChange = ({ target }) => {
         let { value } = target;
         if (target.name === "people") value = Number(target.value);

@@ -10,6 +10,7 @@ import { finishTable } from "../utils/api";
 export default function TableDetails({ tables }) {
     const [tableId, setTableId] = useState(null);
 
+    // --------> API CALL.
     const handleFinish = (event) => {
         event.preventDefault();
         
@@ -31,7 +32,7 @@ export default function TableDetails({ tables }) {
         return () => { abortController.abort() };
     }
 
-    // Holds ID of table user is attempting to finish.
+    // --------> HOLD ID OF TABLE USER IS ATTEMPTING TO FINISH.
     const handleSetId = (table_id) => {
         setTableId(table_id);
     }

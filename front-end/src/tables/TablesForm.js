@@ -4,10 +4,11 @@ import ErrorAlert from "../layout/ErrorAlert";
 import { createTable } from "../utils/api";
 
 export default function TablesForm() {
+    // --------> USE PATH TO DETERMINE WHAT HEADING / FORM CONTENT TO RENDER.
     const history = useHistory();
     const { path } = useRouteMatch();
-    // Use path to determine what heading / form content to render.
 
+    // --------> SET STATE OF RESERVATION AND ERRORS.
     const initialFormState = {
         table_name: "",
         capacity: "",
@@ -23,6 +24,7 @@ export default function TablesForm() {
         });
     };
 
+    // --------> FORM HANDLERS.
     const handleSubmit = (event) => {
         event.preventDefault();
         setTableError(null);
@@ -58,6 +60,7 @@ export default function TablesForm() {
         history.goBack();
     }
 
+    // --------> RENDERS.
     return (
         <main>
             <h1>{(path === "/tables/new") ? "Add a new table:" : "Edit an existing table:"}</h1>

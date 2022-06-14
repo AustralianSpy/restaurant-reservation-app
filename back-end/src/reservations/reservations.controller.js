@@ -153,12 +153,15 @@ function hasValidPeople(req, res, next) {
 }
 
 async function list(req, res) {
-    // Request list of all reservations for date chosen on dashboard.
-    const { date } = req.query;
-    
-    const reservations = await service.list(date);
-
-    res.json({ data: reservations });
+    // Request list of all reservations for for specific date or mobile_number.
+    const { date, mobile_number } = req.query;
+    if (date) {
+        const reservations = await service.list(date);
+        res.json({ data: reservations });
+    } else if (mobile_number) {
+        const reservations = await service.search(mobile_number);
+        res.json({ data: reservations });
+    }    
 }
 
 // Middleware to prevent newly-created reservation from having a status other than "booked".

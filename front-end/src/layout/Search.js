@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { searchReservations } from "../utils/api";
 import useQuery from "../utils/useQuery";
 import ErrorAlert from "../layout/ErrorAlert";
@@ -14,20 +14,20 @@ export default function Search() {
   const [mobileNumber, setMobileNumber] = useState(null);
   const query = useQuery().get("mobile_number");
   
-  useEffect(() => {
-    if (query) setMobileNumber(query);
-  }, [query]);
+  useEffect(() => { if (query) setMobileNumber(query) }, [query]);
 
   // --------> FORM HANDLERS.
   const handleChange = ({ target }) => {
     setMobileNumber(target.value);
   };  
 
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
     const abortController = new AbortController();
     setReservationsError(null);
   
-    searchReservations({ mobileNumber }, abortController.signal)
+    searchReservations(mobileNumber, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError); 
     
@@ -49,7 +49,7 @@ export default function Search() {
     <main>
         <h1 className="text-center my-3 mb-3 border-bottom pb-4">Search for existing reservation:</h1>
         <section className="d-md-flex flex-column mb-3" id="search form">
-            <form className="d-flex flex-row" onSubmit={handleSubmit}>
+            <form className="d-flex flex-row form-group" onSubmit={handleSubmit}>
               <input
                 className="form-control"
                 name="mobile_number"
@@ -57,7 +57,7 @@ export default function Search() {
                 placeholder="Enter a customer's phone number"
                 onChange={handleChange}
               />
-              <button className="btn btn-primary ml-3" type="button">Find</button>
+              <button className="btn btn-primary ml-3" type="submit">Find</button>
             </form>
         </section>
         <section className="d-md-flex flex-column mt-3 pt-4 border-top" id="reservations">

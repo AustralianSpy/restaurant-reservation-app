@@ -10,6 +10,16 @@ function list(date) {
         .orderBy("reservation_time");
 }
 
+// Lists all reservations with full or partial mobile_number match to search input.
+function search(mobile_number) {
+    return knex("reservations")
+        .whereRaw(
+            "translate(mobile_number, '() -', '') like ?",
+            `%${mobile_number.replace(/\D/g, "")}%`
+        )
+        .orderBy("reservation_date");
+}
+
 // Create a new reservation.
 function create(reservation) {
     return knex("reservations")
@@ -44,6 +54,7 @@ function update(updatedReservation) {
 
 module.exports = {
     list,
+    search,
     create,
     read,
     updateStatus,

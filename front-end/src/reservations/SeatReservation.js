@@ -22,7 +22,7 @@ export default function SeatReservation() {
 
     const [seatError, setSeatError] = useState(null);
 
-    // ON LOAD:
+    // --------> ON LOAD, FETCH RESERVATIONS AND TABLES.
     useEffect(loadReservation, [reservation_id]);
 
     function loadReservation() {
@@ -43,7 +43,7 @@ export default function SeatReservation() {
         return () => abortController.abort();
     }
 
-    // FORM HANDLERS:
+    // --------> FORM HANDLERS.
     const handleChange = ({ target }) => {
         setForm(target.value);
     };
@@ -75,6 +75,7 @@ export default function SeatReservation() {
         history.goBack();
     }
 
+    // --------> RENDER CASES.
     if (Object.keys(reservation).length > 0 && tables.length > 0) {
         return (
             <main className="mt-3">
