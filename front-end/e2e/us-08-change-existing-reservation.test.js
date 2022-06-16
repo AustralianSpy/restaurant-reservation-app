@@ -86,14 +86,13 @@ describe("US-08 - Change an existing reservation - E2E", () => {
           );
         }
 
-        page.on("dialog", async (dialog) => {
-          expect(dialog.message()).toContain(
-            "Do you want to cancel this reservation?"
-          );
-          await dialog.accept();
-        });
-
         await cancelButton.click();
+        await page.waitForSelector('[aria-labelledby="cancelReservationLabel"]', {
+          visible: true,
+        });
+        const okButtonSelector = '[data-method-name="accept"]';
+        await page.waitForSelector(okButtonSelector);
+        await page.click(okButtonSelector);
 
         await page.waitForResponse((response) => {
           return response.url().includes("/reservations?date=");
