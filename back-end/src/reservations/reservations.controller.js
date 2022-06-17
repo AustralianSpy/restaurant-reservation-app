@@ -10,6 +10,9 @@ const VALID_PROPERTIES = [
     "reservation_time",
     "people",
     "status",
+    "reservation_id",
+    "created_at",
+    "updated_at",
 ];
 
 // Middleware to ensure improper properties are not being passed
@@ -28,7 +31,7 @@ function hasValidProperties(req, res, next) {
     next();
 }
 
-const hasAllProperties = hasProperties(VALID_PROPERTIES.slice(0, -1));
+const hasAllProperties = hasProperties(VALID_PROPERTIES.slice(0, -4));
 
 // Check to make sure the date of a new reservation is not in the past
 // AND that it is not on a day the restaurant is closed.
@@ -210,9 +213,9 @@ async function read(req, res) {
 // Middleware to validate a change in status for pre-existing reservation.
 function hasValidStatus(req, res, next) {
     const { status } = res.locals.reservation;
-    const updatedStatus = req.body.data.status.toLowerCase();
+    const updatedStatus = req.body.data.status.toLowerCase().trim();
 
-    const validStatus = ["booked", "seated", "finished"];
+    const validStatus = ["booked", "seated", "finished", "cancelled"];
 
     if (!updatedStatus || !validStatus.includes(updatedStatus)) {
         return next({
@@ -243,14 +246,25 @@ async function updateStatus(req, res) {
 
 async function update(req, res) {
     const { reservation_id } = res.locals.reservation;
-    const { data } = req.body;
+    const { data: { first_name, last_name, mobile_number, reservation_date, reservation_time, people } } = req.body;
 
     const updatedReservation = {
-        ...data,
+        first_name,
+        last_name,
+        mobile_number,
+        reservation_date,
+        reservation_time,
+        people,
         reservation_id: reservation_id,
     };
 
-    res.status(200).json({ data: await service.update(updatedReservation) });
+    const response = await service.update(updatedReservation);
+
+    res.status(200).json({ data: {
+        ...response,
+        [response.reservation_date]: response.reservation_date.toString(),
+        [response.reservation_time]: response.reservation_time.toString(),
+    }  });
 }
 
 module.exports = {

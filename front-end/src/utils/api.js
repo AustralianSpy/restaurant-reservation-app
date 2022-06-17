@@ -181,3 +181,39 @@ export async function searchReservations(mobile_number, signal) {
   const url = `${API_BASE_URL}/reservations?mobile_number=${mobile_number}`;
   return await fetchJson(url, { headers, signal }, []);
 }
+
+/**
+  Changes the status of a reservation to "cancelled".
+  @returns {Promise<[reservation]>}
+  a promise that resolves to the reservation data that was saved in the database.
+*/
+
+export async function cancelReservation(reservation_id, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: { status: "cancelled "} }),
+    signal,
+  };
+
+  return await fetchJson(url, options, {});
+}
+
+/**
+  Updates a reservation..
+  @returns {Promise<[reservation]>}
+  a promise that resolves to the reservation data that was saved in the database.
+*/
+
+export async function updateReservation(reservation, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation.reservation_id}`;
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: reservation }),
+    signal,
+  };
+
+  return await fetchJson(url, options, {});
+}
