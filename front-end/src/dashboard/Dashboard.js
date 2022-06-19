@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { listReservations, listTables } from "../utils/api";
 import useQuery from "../utils/useQuery";
@@ -8,6 +8,9 @@ import { today, next, previous } from "../utils/date-time";
 import ReservationDetails from "../reservations/ReservationDetails";
 import TableDetails from "../tables/TableDetails";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 /**
  * Defines the dashboard page.
  * @param date
@@ -15,12 +18,13 @@ import TableDetails from "../tables/TableDetails";
  * @returns {JSX.Element}
  */
 function Dashboard({ date }) {
-  const [reservations, setReservations] = useState([]);
+  const [reservations, setReservations] = useState(null);
   const [reservationsError, setReservationsError] = useState(null);
   
-  const [tables, setTables] = useState([]);
+  const [tables, setTables] = useState(null);
   const [tablesError, setTablesError] = useState(null);
 
+  // --------> FETCH MANUALLY-ENTERED DATE.
   const history = useHistory();
   const query = useQuery().get("date");
   if (query) date = query;
@@ -43,6 +47,7 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
+  // --------> HANDLERS FOR DATE-NAVIGATION BUTTONS.
   const handlePreviousDate = () => {
     history.push(`dashboard?date=${previous(date)}`);
   }
@@ -55,9 +60,45 @@ function Dashboard({ date }) {
     history.push(`dashboard?date=${today()}`);
   }
 
-  const handleReload = () => {
-    loadDashboard();
-  }
+  // --------> GENERATE LOAD-SKELETONS TO DISPLAY WHILE FETCHING.
+  const tablesLoader = useMemo(() => {
+    const skeleton = [];
+    for (let i = 0; i < 2; i++) {
+      skeleton.push(
+        <div className="card mb-3" key={`skeleton ${i}`} >
+          <div className="card-header">
+            <Skeleton />
+          </div>
+          <div className="list-group list-group-flush">
+            <li className="list-group-item"><Skeleton /></li>
+            <li className="list-group-item text-uppercase"><Skeleton /></li>
+          </div>
+        </div>
+      );
+    }
+    return skeleton;
+  }, []);
+
+  const reservationsLoader = useMemo(() => {
+    const skeleton = [];
+    for (let i = 0; i < 2; i++) {
+      skeleton.push(
+        <div className="card mb-3" key={`skeleton ${i}`}>
+          <div className="card-header"><Skeleton /></div>
+          <div className="list-group list-group-flush">
+              <li className="list-group-item"><Skeleton /></li>
+              <li className="list-group-item"><Skeleton /></li>
+              <li className="list-group-item"><Skeleton /></li>
+          </div>
+          <div className="card-body d-flex flex-row">
+              <p className="text-uppercase fw-bold align-self my-auto"><Skeleton /></p>
+              <div><Skeleton /></div>
+          </div>
+      </div>
+      );
+    }
+    return skeleton;
+  }, []);
 
   return (
     <main>
@@ -68,7 +109,9 @@ function Dashboard({ date }) {
         <h4 className="mb-1">Reservations for {date}:</h4>
         <ErrorAlert error={reservationsError} />
         {
-          (reservations.length > 0) ? <ReservationDetails reservations={reservations} /> : <h3>No reservations this day.</h3>
+          reservations ?
+            <ReservationDetails reservations={reservations} /> :
+            reservationsLoader
         }
         <div className="button-group">
           <button className="btn btn-primary" name="previous" onClick={handlePreviousDate} to={`/dashboard/date=${date}`}>
@@ -85,9 +128,10 @@ function Dashboard({ date }) {
       <section className="d-md-flex flex-column mb-3" id="tables">
         <h4 className="mb-1">All Tables:</h4>
           <ErrorAlert error={tablesError} />
-          {/*(tables.length > 0) ? JSON.stringify(tables) : "You have no registered tables."*/}
           {
-            (tables.length > 0) ? <TableDetails tables={tables} handleReload={handleReload} /> : <h5>You have no registered tables.</h5>
+            tables ?
+              <TableDetails tables={tables} /> : 
+              tablesLoader
           }
         </section>
     </main>

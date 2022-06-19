@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { searchReservations } from "../utils/api";
 import useQuery from "../utils/useQuery";
 import ErrorAlert from "../layout/ErrorAlert";
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 import ReservationDetails from "../reservations/ReservationDetails";
 
 export default function Search() {
   // -------> STORE RESERVATIONS FOUND AND ERRORS.
-  const [reservations, setReservations] = useState([]);
+  const [reservations, setReservations] = useState(null);
   const [reservationsError, setReservationsError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // -------> HANDLE MOBILE NUMBER IN URL QUERY, SET WITH USE-EFFECT, OR THROUGH INPUT.
   const [mobileNumber, setMobileNumber] = useState(null);
@@ -17,33 +21,57 @@ export default function Search() {
   useEffect(() => { if (query) setMobileNumber(query) }, [query]);
 
   // --------> FORM HANDLERS.
-  const handleChange = ({ target }) => {
-    setMobileNumber(target.value);
-  };  
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const abortController = new AbortController();
     setReservationsError(null);
+    setIsLoading(true);
   
     searchReservations(mobileNumber, abortController.signal)
       .then(setReservations)
+      .then(() => setIsLoading(false))
       .catch(setReservationsError); 
     
     return () => abortController.abort();
   }
 
+  const handleChange = ({ target }) => {
+    setMobileNumber(target.value);
+  };  
+
+  // --------> DISPLAY SKELETON IF LOADING.
+  const reservationsLoader = useMemo(() => {
+    const skeleton = [];
+    for (let i = 0; i < 2; i++) {
+      skeleton.push(
+        <div className="card mb-3" key={`skeleton ${i}`}>
+          <div className="card-header"><Skeleton /></div>
+          <div className="list-group list-group-flush">
+              <li className="list-group-item"><Skeleton /></li>
+              <li className="list-group-item"><Skeleton /></li>
+              <li className="list-group-item"><Skeleton /></li>
+          </div>
+          <div className="card-body d-flex flex-row">
+              <p className="text-uppercase fw-bold align-self my-auto"><Skeleton /></p>
+              <div><Skeleton /></div>
+          </div>
+      </div>
+      );
+    }
+    return skeleton;
+  }, []);
+
   // --------> CHOOSE WHICH COMPONENTS TO RENDER.
   const renderSearch = () => {
     if (mobileNumber === null) {
       return null;
-    } else if (reservations.length > 0) {
-      return <ReservationDetails reservations={reservations} />
-    } else {
+    } else if (reservations?.length > 0) {
+        return <ReservationDetails reservations={reservations} />
+    } else if (reservations?.length === 0) {
       return <h3>No reservations found.</h3>
     }
-  }
+}
 
   return (
     <main>
@@ -62,7 +90,10 @@ export default function Search() {
         </section>
         <section className="d-md-flex flex-column mt-3 pt-4 border-top" id="reservations">
             <ErrorAlert error={reservationsError} />
-            { renderSearch() }
+            { isLoading ?
+                reservationsLoader :
+                renderSearch() 
+            }
         </section>
     </main>
   );

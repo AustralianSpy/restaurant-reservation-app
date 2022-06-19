@@ -86,30 +86,34 @@ export default function ReservationDetails({ reservations }) {
         })
     }, [reservations]);
 
-    return (
-        <section>
-            { reservationList }
-
-            { /* MODAL PROMPT. Defaults to hidden until above button is clicked. */ }
-            <div className="modal fade" id="cancelReservation" tabIndex="-1" aria-labelledby="cancelReservationLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="cancelReservationLabel">Cancelling Reservation...</h5>
-                            <button className="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span>&times;</span>
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            Do you want to cancel this reservation? This cannot be undone.
-                        </div>
-                        <div className="modal-footer">
-                            <button className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button className="btn btn-primary" data-method-name="accept" aria-label="accept" onClick={handleCancel}>OK</button>
+    if (reservations.length === 0) {
+        return <h3>No reservations this day.</h3>;
+    } else {
+        return (
+            <section>
+                { reservationList }
+    
+                { /* MODAL PROMPT. Defaults to hidden until above button is clicked. */ }
+                <div className="modal fade" id="cancelReservation" tabIndex="-1" aria-labelledby="cancelReservationLabel" aria-hidden="true">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="cancelReservationLabel">Cancelling Reservation...</h5>
+                                <button className="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span>&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                Do you want to cancel this reservation? This cannot be undone.
+                            </div>
+                            <div className="modal-footer">
+                                <button className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button className="btn btn-primary" data-method-name="accept" aria-label="accept" onClick={handleCancel}>OK</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    );
+            </section>
+        );
+    }
 }

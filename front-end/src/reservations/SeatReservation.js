@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router";
 import { readReservation, listTables, reserveTable } from "../utils/api";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 import ErrorAlert from "../layout/ErrorAlert";
 
@@ -16,8 +18,8 @@ export default function SeatReservation() {
     const history = useHistory();
     const { reservation_id } = useParams();
 
-    const [reservation, setReservation] = useState({});
-    const [tables, setTables] = useState([]);
+    const [reservation, setReservation] = useState(null);
+    const [tables, setTables] = useState(null);
     const [form, setForm] = useState(null);
 
     const [seatError, setSeatError] = useState(null);
@@ -76,7 +78,9 @@ export default function SeatReservation() {
     }
 
     // --------> RENDER CASES.
-    if (Object.keys(reservation).length > 0 && tables.length > 0) {
+    if (!tables || !reservation) {
+        return <Skeleton count={3} className="mt-4" height={30} />
+    } else if (Object.keys(reservation).length > 0 && tables.length > 0) {
         return (
             <main className="mt-3">
                 <h1 className="mb-4">Now seating table for {`${reservation.first_name} ${reservation.last_name}`}</h1>
@@ -97,7 +101,7 @@ export default function SeatReservation() {
             </form>
             </main>
         )
-    } else if (!tables.length) {
+    } else if (tables?.length === 0) {
         return (
             <main className="mt-3">
                 <div className="d-flex flex-column">
