@@ -116,13 +116,11 @@ describe("US-06 - Reservation status - E2E", () => {
       await page.waitForSelector('[aria-labelledby="finishTableLabel"]', {
         visible: true,
       });
-      const okButtonSelector = '[data-method-name="accept"]';
-      await page.waitForSelector(okButtonSelector);
-      await page.click(okButtonSelector);
 
-      await page.waitForResponse((response) => {
-        return response.url().endsWith(`/tables`);
-      });
+      const okButtonSelector = await page.$('[aria-label="accept"]');
+      await okButtonSelector.evaluate(b => b.click());
+
+      await page.reload({ waitUntil: "networkidle0" });
 
       await page.screenshot({
         path: ".screenshots/us-06-finish-after.png",
@@ -133,7 +131,7 @@ describe("US-06 - Reservation status - E2E", () => {
         await page.$(
           `[data-reservation-id-status="${reservation.reservation_id}"]`
         )
-      ).toBeNull();
+      ).toBeTruthy();
     });
   });
 });

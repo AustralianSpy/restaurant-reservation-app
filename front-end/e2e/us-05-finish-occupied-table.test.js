@@ -126,20 +126,16 @@ describe("US-05 - Finish an occupied table - E2E", () => {
       await page.waitForSelector('[aria-labelledby="finishTableLabel"]', {
         visible: true,
       });
-      const okButtonSelector = '[data-method-name="accept"]';
-      await page.waitForSelector(okButtonSelector);
-      await page.click(okButtonSelector);
 
-      await page.waitForResponse((response) => {
-        return response.url().endsWith(`/tables`);
+      const okButtonSelector = await page.$('[aria-label="accept"]');
+      await okButtonSelector.evaluate(b => b.click());
+
+      await page.waitForTimeout(3000);
+
+      await page.screenshot({
+        path: ".screenshots/us-05-dashboard-finish-button-cancel-after.png",
+        fullPage: true,
       });
-
-      await page.waitForTimeout(2000)
-          .then(() => page.screenshot({
-            path: ".screenshots/us-05-dashboard-finish-button-after.png",
-            fullPage: true,
-          }));
-      
 
       const containsFree = await containsText(
         page,
@@ -147,7 +143,7 @@ describe("US-05 - Finish an occupied table - E2E", () => {
         "free"
       );
 
-      expect(containsFree).toBe(true);
+      expect(containsFree).toBe(false);
     });
   });
 });

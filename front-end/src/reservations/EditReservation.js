@@ -37,7 +37,7 @@ export default function EditReservation() {
                     setReservationError(error);
                 }
             } catch (error) {
-                throw error;
+                setReservationError(error);
             }
         };
 

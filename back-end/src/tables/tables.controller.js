@@ -160,8 +160,9 @@ async function update(req, res) {
         table_id: table_id,
         reservation_id: reservation_id,
     };
+    const result = await service.update(updatedTable);
 
-    res.status(200).json({ data: await service.update(updatedTable) });
+    res.status(200).json({ data: result });
 }
 
 // Finish a table by changing reservation_id to 'null'.

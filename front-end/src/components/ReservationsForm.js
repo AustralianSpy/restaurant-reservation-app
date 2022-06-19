@@ -1,14 +1,21 @@
 import React from "react";
 import { useHistory, useRouteMatch } from "react-router";
 import { createReservation, updateReservation } from "../utils/api";
+import moment from "moment";
 
 export default function ReservationsForm({ reservation, handleChange, handleError }) {
     // --------> USE PATH TO DETERMINE WHAT HEADING / FORM CONTENT TO RENDER.
     const history = useHistory();
     const { path } = useRouteMatch();
-    const { first_name, last_name, mobile_number, reservation_date, reservation_time, people } = reservation;
+    const { 
+        first_name,
+        last_name,
+        mobile_number,
+        reservation_time,
+        people
+    } = reservation;
+    const reservation_date = moment(reservation.reservation_date).format('YYYY-MM-DD');
     
-
     // --------> SUBMIT HANDLERS.
     const handleSubmit = (event) => {
         event.preventDefault();

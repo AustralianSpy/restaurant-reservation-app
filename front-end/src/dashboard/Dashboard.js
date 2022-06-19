@@ -55,6 +55,10 @@ function Dashboard({ date }) {
     history.push(`dashboard?date=${today()}`);
   }
 
+  const handleReload = () => {
+    loadDashboard();
+  }
+
   return (
     <main>
 
@@ -63,7 +67,6 @@ function Dashboard({ date }) {
       <section className="d-md-flex flex-column mb-3" id="reservations">
         <h4 className="mb-1">Reservations for {date}:</h4>
         <ErrorAlert error={reservationsError} />
-        {/*(reservations.length > 0) ? JSON.stringify(reservations) : "No reservations this day." */}
         {
           (reservations.length > 0) ? <ReservationDetails reservations={reservations} /> : <h3>No reservations this day.</h3>
         }
@@ -84,7 +87,7 @@ function Dashboard({ date }) {
           <ErrorAlert error={tablesError} />
           {/*(tables.length > 0) ? JSON.stringify(tables) : "You have no registered tables."*/}
           {
-            (tables.length > 0) ? <TableDetails tables={tables} /> : <h5>You have no registered tables.</h5>
+            (tables.length > 0) ? <TableDetails tables={tables} handleReload={handleReload} /> : <h5>You have no registered tables.</h5>
           }
         </section>
     </main>

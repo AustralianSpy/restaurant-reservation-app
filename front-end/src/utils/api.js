@@ -177,7 +177,6 @@ export async function finishTable(table_id, signal) {
 */
 
 export async function searchReservations(mobile_number, signal) {
-  console.log(mobile_number)
   const url = `${API_BASE_URL}/reservations?mobile_number=${mobile_number}`;
   return await fetchJson(url, { headers, signal }, []);
 }
@@ -193,10 +192,10 @@ export async function cancelReservation(reservation_id, signal) {
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({ data: { status: "cancelled "} }),
+    body: JSON.stringify({ data: { status: "cancelled"} }),
     signal,
   };
-
+  
   return await fetchJson(url, options, {});
 }
 

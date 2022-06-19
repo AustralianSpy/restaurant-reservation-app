@@ -36,11 +36,11 @@ function read(reservation_id) {
         .first();
 }
 
-function updateStatus({ reservation_id, status }) {
+function updateStatus(updatedStatus) {
     return knex("reservations")
         .select("*")
-        .where({ reservation_id })
-        .update('status', status)
+        .where({ reservation_id: updatedStatus.reservation_id })
+        .update({ status: updatedStatus.status })
         .returning("*")
         .then((updated) => updated[0]);
 }

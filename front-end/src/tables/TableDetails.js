@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router";
 import { finishTable } from "../utils/api";
 
 /*
@@ -7,8 +8,9 @@ import { finishTable } from "../utils/api";
     from that table.
 */
 
-export default function TableDetails({ tables }) {
+export default function TableDetails({ tables, handleReload }) {
     const [tableId, setTableId] = useState(null);
+    const history = useHistory();
 
     // --------> API CALL.
     const handleFinish = (event) => {
@@ -18,7 +20,7 @@ export default function TableDetails({ tables }) {
         const submitData = async () => {
             try {
                 await finishTable(tableId, abortController.signal);
-                window.location.reload();
+                history.go("/");
             } catch (error) {
                 if (error.name === "AbortedError") {
                     console.log("Aborted request.");
@@ -54,7 +56,7 @@ export default function TableDetails({ tables }) {
                                 <li className="list-group-item text-uppercase" data-table-id-status={table_id}>
                                     {
                                         !occupied ?
-                                            "Free" :
+                                            "free" :
                                             <>occupied
                                             <button type="button"
                                             className="btn btn-dark ml-3"
