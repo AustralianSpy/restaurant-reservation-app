@@ -1,0 +1,19 @@
+.table-card {
+    width: 225px;
+}
+
+.table-card > .list-group {
+    height: 100%;
+}
+
+.status-row {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   height: 100% !important;
+}
+
+.btn-finish {
+    background-color: var(--orange);
+    color: white;
+}

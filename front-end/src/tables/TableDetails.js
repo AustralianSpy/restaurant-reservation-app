@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { finishTable } from "../utils/api";
 
+import "./TableDetails.css";
+
 /*
     Component lists all registered tables as well as handles the 
     'finish table' functionality that removes a seated reservation
@@ -45,26 +47,26 @@ export default function TableDetails({ tables }) {
         )
     } else {
         return (
-            <section>
+            <section className="px-2 d-flex flex-row justify-content-between flex-wrap tables-container">
                 {
                     tables.map((table) => {
                         const { table_name, capacity, reservation_id, table_id } = table;
                         const occupied = (reservation_id === null) ?  false : true;
             
                         return (
-                            <div className="card mb-3" key={table_id}>
+                            <div className="card mb-3 table-card" key={table_id}>
                                 <div className="card-header">
                                     {table_name}
                                 </div>
                                 <div className="list-group list-group-flush">
                                     <li className="list-group-item">Capacity: {capacity}</li>
-                                    <li className="list-group-item text-uppercase" data-table-id-status={table_id}>
+                                    <li className="list-group-item text-uppercase status-row" data-table-id-status={table_id}>
                                         {
                                             !occupied ?
                                                 "free" :
                                                 <>occupied
                                                 <button type="button"
-                                                className="btn btn-dark ml-3"
+                                                className="btn btn-finish ml-3"
                                                 data-toggle="modal" data-target="#finishTable"
                                                 aria-controls="finishTable"
                                                 aria-hidden="true" aria-label="toggle modal"

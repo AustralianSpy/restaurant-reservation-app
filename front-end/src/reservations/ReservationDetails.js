@@ -2,7 +2,14 @@ import React, { useState, useMemo } from "react";
 import { useHistory } from "react-router";
 import { cancelReservation } from "../utils/api";
 
-export default function ReservationDetails({ reservations }) {
+import "./ReservationDetails.css";
+
+/*
+    Takes in a 'searching' prop (bool) which decides how to style
+    the component depending on if it is rendered on the search page.
+*/
+
+export default function ReservationDetails({ reservations, searching = false }) {
     const [reservationId, setReservationId] = useState(null);
     const history = useHistory();
 
@@ -56,19 +63,19 @@ export default function ReservationDetails({ reservations }) {
             const {first_name, last_name, reservation_time, people, mobile_number, reservation_id, status } = reservation;
             const time = formatTime(reservation_time);
             return (
-                <div className="card mb-3" key={reservation_id}>
+                <div className="card mb-3 reservation-card" key={reservation_id}>
                     <div className="card-header">
                         {first_name} {last_name}
                     </div>
-                    <div className="list-group list-group-flush">
+                    <div className="list-group list-group-flush d-flex flex-row">
                         <li className="list-group-item">{time}</li>
                         <li className="list-group-item">{people === 1 ? "1 person" : `${people} people`}</li>
                         <li className="list-group-item">{mobile_number}</li>
                     </div>
-                    <div className="card-body d-flex flex-row">
+                    <div className="card-body d-flex flex-row justify-content-between py-2">
                         <p className="text-uppercase fw-bold align-self my-auto" data-reservation-id-status={reservation_id}>{status}</p>
                         { (status === 'booked') &&
-                            <div>
+                            <div className="res-buttons">
                                 <a href={`/reservations/${reservation_id}/seat`} className="btn btn-success ml-3">Seat</a>
                                 <a href={`/reservations/${reservation_id}/edit`} className="btn btn-secondary ml-3">Edit</a>
                                 <button
@@ -90,8 +97,13 @@ export default function ReservationDetails({ reservations }) {
         return <h3>No reservations this day.</h3>;
     } else {
         return (
-            <section>
+            <div>
+                <section
+                    className="d-flex justify-content-around flex-wrap reservations-container px-2"
+                    style={{ flexDirection: searching ? "column" : "row"}}
+                >
                 { reservationList }
+                </section>
     
                 { /* MODAL PROMPT. Defaults to hidden until above button is clicked. */ }
                 <div className="modal fade" id="cancelReservation" tabIndex="-1" aria-labelledby="cancelReservationLabel" aria-hidden="true">
@@ -113,7 +125,7 @@ export default function ReservationDetails({ reservations }) {
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
         );
     }
 }

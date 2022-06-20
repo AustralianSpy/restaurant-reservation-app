@@ -1,4 +1,106 @@
+/* ---- GLOBAL STYLES: ROOT / PAGE, COLORS, BUTTONS, SIDEBAR. ---- */
+
+:root {
+  --dark-blue: #3D405B;
+  --orange: #E07A5F;
+  --green: #81B29A;
+  --yellow: #F2CC8F;
+  --neutral: #F4F1DE;
+}
+
+* {
+  font-family: "Work Sans", "Raleway", "Manrope", sans-serif;
+}
+
+body {
+  background-color: var(--neutral);
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+h1 {
+  color: var(--dark-blue);
+  font-weight: 600;
+  width: 100%;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 1rem 0;
+}
+
+h2, h3, h4 {
+  color: var(--dark-blue);
+  font-weight: 400;
+  margin: 1rem 0;
+}
+
+.btn-primary,
+.btn-primary:focus {
+  background-color: var(--dark-blue);
+  border-color: transparent;
+  box-shadow: none !important;
+}
+
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:active:focus,
+.btn-primary:disabled {
+  background-color: #191b25 !important;
+  border-color: transparent;
+}
+
+.btn-secondary,
+.btn-secondary:focus {
+  background-color: #6C757D;
+  border-color: transparent;
+  box-shadow: none !important;
+}
+
+.btn-success,
+.btn-success:focus {
+  background-color: var(--green);
+  border-color: transparent;
+  box-shadow: none !important;
+}
+
+.btn-success:hover,
+.btn-success:active,
+.btn-success:active:focus,
+.btn-success:disabled {
+  background-color: #698B7B !important;
+  border-color: transparent;
+}
+
+.btn-danger,
+.btn-danger:focus {
+  background-color: var(--orange);
+  border-color: transparent;
+  box-shadow: none !important;
+}
+
+.btn-danger:hover,
+.btn-danger:active,
+.btn-danger:active:focus,
+.btn-danger:disabled {
+  background-color: #BA5F46 !important;
+  border-color: transparent;
+}
+
+.alert-danger {
+  background-color: #FFDFD7;
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
 .side-bar {
-  background-color: #393a44;
-  min-width: 200px;
+  background-color: var(--dark-blue);
+  max-width: 250px;
+}
+
+@media (max-width: 768px) {
+  .side-bar {
+    max-width: 100%;
+  }
 }

@@ -1,0 +1,19 @@
+.reservation-card {
+    max-width: 100%;
+    min-width: 300px;
+}
+
+.reservation-card > .list-group > .list-group-item {
+    flex-grow: 1;
+}
+
+@media (max-width: 408px) {
+    .res-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
+    .res-buttons > .btn {
+        margin: 3px 0;
+    }
+}
