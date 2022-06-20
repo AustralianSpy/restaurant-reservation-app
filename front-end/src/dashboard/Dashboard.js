@@ -68,13 +68,13 @@ function Dashboard({ date }) {
     const skeleton = [];
     for (let i = 0; i < 2; i++) {
       skeleton.push(
-        <div className="card mb-3" key={`skeleton ${i}`} >
+        <div className="card mb-3 table-card" key={`skeleton ${i}`} >
           <div className="card-header">
             <Skeleton />
           </div>
           <div className="list-group list-group-flush">
             <li className="list-group-item"><Skeleton /></li>
-            <li className="list-group-item text-uppercase"><Skeleton /></li>
+            <li className="list-group-item text-uppercase status-row"><Skeleton /></li>
           </div>
         </div>
       );
@@ -86,14 +86,14 @@ function Dashboard({ date }) {
     const skeleton = [];
     for (let i = 0; i < 2; i++) {
       skeleton.push(
-        <div className="card mb-3" key={`skeleton ${i}`}>
+        <div className="card mb-3 reservation-card" key={`skeleton ${i}`}>
           <div className="card-header"><Skeleton /></div>
-          <div className="list-group list-group-flush">
+          <div className="list-group list-group-flush d-flex flex-row">
               <li className="list-group-item"><Skeleton /></li>
               <li className="list-group-item"><Skeleton /></li>
               <li className="list-group-item"><Skeleton /></li>
           </div>
-          <div className="card-body d-flex flex-row">
+          <div className="card-body d-flex flex-row justify-content-between py-2">
               <p className="text-uppercase fw-bold align-self my-auto"><Skeleton /></p>
               <div><Skeleton /></div>
           </div>
