@@ -10,15 +10,24 @@
 
 * {
   font-family: "Work Sans", "Raleway", "Manrope", sans-serif;
+  shape-rendering: geometricPrecision;
+}
+
+html {
+  min-height: 100%;
 }
 
 body {
   background-color: var(--neutral);
-  height: 100%;
+  min-height: 100vh !important;
 }
 
 #root {
-  height: 100%;
+  min-height: 100vh !important;
+}
+
+#page-row {
+  min-height: 100vh;
 }
 
 h1 {
@@ -102,5 +111,8 @@ h2, h3, h4 {
 @media (max-width: 768px) {
   .side-bar {
     max-width: 100%;
+  }
+  #page-row {
+    min-height: 100%;
   }
 }

@@ -1,17 +1,19 @@
 /* ---- ALL TITLES + SVG STYLE. ---- */
+.title-header {
+    background-color: var(--green);
+}
 
 .dashboard-title {
     background-color: var(--yellow);
+    width: 100%;
 }
 
 .section-title {
     color: #565656;
     background-color: var(--green);
-    padding: 1rem 1rem 0 1rem;
-}
-
-.svg-border {
-    color: var(--green);
+    margin: 0;
+    padding: 0 1em !important;
+    word-wrap: normal;
 }
 
 /* ---- NAVIGATE BY DAY BUTTON-GROUP. ---- */
@@ -74,12 +76,4 @@
 .card-body {
     border: 1px solid var(--yellow) !important;
     border-top: none !important;
-}
-
-.list-group-item {
-    margin-left: -1px;
-}
-
-.list-group-item:first-child {
-    margin-left: 0px;
 }

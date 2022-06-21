@@ -47,7 +47,7 @@ export default function TableDetails({ tables }) {
         )
     } else {
         return (
-            <section className="px-2 d-flex flex-row justify-content-between flex-wrap tables-container">
+            <section className="px-3 d-flex flex-row justify-content-around flex-wrap tables-container">
                 {
                     tables.map((table) => {
                         const { table_name, capacity, reservation_id, table_id } = table;

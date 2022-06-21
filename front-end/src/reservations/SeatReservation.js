@@ -5,6 +5,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 import ErrorAlert from "../layout/ErrorAlert";
+import BorderBotYellow from "../components/BorderBotYellow";
 
 /*
     Fetches a single reservation, list of tables.
@@ -83,8 +84,8 @@ export default function SeatReservation() {
     } else if (Object.keys(reservation).length > 0 && tables.length > 0) {
         return (
             <main className="mt-3">
-                <h1 className="mb-4">Now seating table for {`${reservation.first_name} ${reservation.last_name}`}</h1>
-                <hr className="mx-5" />
+                <h1 className="text-center text-uppercase m-0 pb-2 pt-4" style={{ backgroundColor: "var(--yellow)" }}>Now seating table for {`${reservation.first_name} ${reservation.last_name}`}</h1>
+                <BorderBotYellow />
                 <ErrorAlert error={seatError} />
                 <form onSubmit={handleSubmit} aria-label="seating form">
                 <div className="form-group">
