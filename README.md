@@ -6,6 +6,16 @@ Restaurant personnel can track, edit, and cancel reservations, as well as monito
 
 > Deployment: [Periodic Tables](https://restaurant-reservation-app-client.vercel.app)
 
+## Design
+
+This application supports both laptop / desktop users and mobile users.
+
+### Desktop
+![Periodic-Dashboard](https://user-images.githubusercontent.com/69498225/174704442-cdb1ce30-c293-4717-bb8f-89a6c4019b42.jpg)
+
+### Mobile
+![Dashboard-Mobile-1](https://user-images.githubusercontent.com/69498225/174704699-da59ce45-c95b-4e4b-9bb8-905ba15927f7.jpg) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![Dashboard-Mobile-2](https://user-images.githubusercontent.com/69498225/174704892-3aa9f0c0-f4e1-41dd-9451-0241faa39212.jpg)
+
 ## Tech Stack
 
 ### Front-end:
