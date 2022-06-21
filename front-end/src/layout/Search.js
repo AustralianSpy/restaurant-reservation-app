@@ -49,7 +49,7 @@ export default function Search() {
     } else if (reservations?.length > 0) {
         return <ReservationDetails reservations={reservations} searching={true} />
     } else if (reservations?.length === 0) {
-      return <h3>No reservations found.</h3>
+      return <h3 className="text-center w-100">No reservations found.</h3>
     }
 }
 

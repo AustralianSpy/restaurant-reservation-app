@@ -94,7 +94,7 @@ export default function ReservationDetails({ reservations, searching = false }) 
     }, [reservations]);
 
     if (reservations.length === 0) {
-        return <h3>No reservations this day.</h3>;
+        return <h3 className="text-center w-100">No reservations this day.</h3>;
     } else {
         return (
             <div>

@@ -43,7 +43,7 @@ export default function TableDetails({ tables }) {
 
     if (tables.length === 0) {
         return (
-            <h5>You have no registered tables.</h5>
+            <h5 className="text-center w-100">You have no registered tables.</h5>
         )
     } else {
         return (
