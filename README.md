@@ -4,7 +4,7 @@ This application, _Periodic Tables_, is a reservation system for restaurants.
 The software is used by restaurant personnel when a customer calls to request a reservation.
 Restaurant personnel can track, edit, and cancel reservations, as well as monitor their available tables.
 
-> Deployment: (Periodic Tables)[https://restaurant-reservation-app-client.vercel.app]
+> Deployment: [Periodic Tables](https://restaurant-reservation-app-client.vercel.app)
 
 ## Tech Stack
 
